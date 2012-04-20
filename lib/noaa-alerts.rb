@@ -4,25 +4,39 @@ require "httparty"
 module Noaa
   module Alerts
     def self.fetch_and_create(state_abbr)
-      url = url_from_state(state_abbr)
-      response = HTTParty.get(url, :format => :xml).parsed_response
-      message = parse_message_from_response(response)
-      return [Alert.new(message)]
+      messages = []
+      alerts = []
+      entries = fetch_entries(state_abbr)
+
+      entries.each do |entry|
+        messages << fetch_alert_from_entry(entry)
+      end
+
+      messages.each do |message|
+        alerts << Alert.new(message)
+      end
+      return alerts
     end
 
-    def self.url_from_state(state_abbr)
+    def self.fetch_entries(state_abbr)
       url = "http://alerts.weather.gov/cap/#{state_abbr}.php?x=0"
+      response = HTTParty.get(url, :format => :xml).parsed_response
+      entries = response.fetch("feed").fetch("entry")
+      entries = [entries] unless entries.kind_of?(Array)
+      return entries
     end
 
-    def self.parse_message_from_response(response)
-      response.fetch('feed').fetch('entry')
+    def self.fetch_alert_from_entry(entry)
+      url = entry.fetch('id')
+      response = HTTParty.get(url, :format => :xml).parsed_response
+      response.fetch('alert')
     end
 
     class Alert
-      attr_reader :summary, :latitude, :longitude
+      attr_reader :description, :latitude, :longitude
 
       def initialize(message)
-        @summary = message.fetch('summary')
+        @description = message.fetch('info').fetch('description')
         coords = extract_location(message)
         @latitude = coords.fetch(:latitude)
         @longitude = coords.fetch(:longitude)

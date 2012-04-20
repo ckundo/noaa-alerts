@@ -12,8 +12,8 @@ describe Noaa::Alerts do
   describe Noaa::Alerts::Alert do
     let(:alert) { alerts.first }
     
-    it 'has a summary' do
-      alert.summary.should_not be_empty
+    it 'has a description' do
+      alert.description.should_not be_empty
     end
     
     it 'has coordinates' do
