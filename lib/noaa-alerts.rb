@@ -7,7 +7,7 @@ module Noaa
       messages = []
       alerts = []
 
-      catalog = message_catalog_for_state(state_abbr)
+      catalog = catalog_for_state(state_abbr)
       catalog.each do |entry|
         messages << message_from_catalog_entry(entry)
       end
@@ -19,7 +19,7 @@ module Noaa
       return alerts
     end
 
-    def self.message_catalog_for_state(state_abbr)
+    def self.catalog_for_state(state_abbr)
       url = "http://alerts.weather.gov/cap/#{state_abbr}.php?x=0"
       response = HTTParty.get(url, :format => :xml).parsed_response
       entries = response.fetch("feed").fetch("entry")
@@ -34,14 +34,15 @@ module Noaa
     end
 
     class Alert
-      attr_reader :description, :latitude, :longitude, :areas
+      attr_reader :description, :latitude, :longitude, :areas, :bounds
 
       def initialize(message)
         @description = message.fetch('info').fetch('description')
 
         coords = extract_coordinates(message)
-        @latitude = coords.fetch(:latitude)
-        @longitude = coords.fetch(:longitude)
+        @latitude = coords[:latitude]
+        @longitude = coords[:longitude]
+        @bounds = { :northeast => [0,0], :southwest => [0,0] }
 
         @areas = message.fetch('info')
           .fetch('area')

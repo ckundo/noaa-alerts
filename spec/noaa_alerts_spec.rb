@@ -1,7 +1,7 @@
 require 'noaa-alerts'
 
 describe Noaa::Alerts do
-  let(:alerts) { Noaa::Alerts.find_by_state("us") }
+  let(:alerts) { Noaa::Alerts.find_by_state("ca") }
 
   describe '.fetch_and_create' do
     it 'returns alerts' do
@@ -22,11 +22,14 @@ describe Noaa::Alerts do
       alert.areas.should_not be_empty
     end
 
-    xit 'has coordinates' do
+    it 'has coordinates' do
       alert.latitude.should be_an_instance_of Float
       alert.longitude.should be_an_instance_of Float
     end
     
-    xit 'has geographic bounds'
+    it 'has geographic bounds' do
+      alert.bounds.should be_an_instance_of Array
+      alert.bounds.should_not be_empty
+    end
   end
 end
