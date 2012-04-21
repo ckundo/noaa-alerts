@@ -34,26 +34,71 @@ module Noaa
     end
 
     class Alert
-      attr_reader :description, :latitude, :longitude, :areas, :bounds
+      attr_reader :description, :latitude, :longitude, :fips_codes, :locations
+      @message = ""
 
       def initialize(message)
-        @description = message.fetch('info').fetch('description')
-
-        coords = extract_coordinates(message)
-        @latitude = coords[:latitude]
-        @longitude = coords[:longitude]
-        @bounds = { :northeast => [0,0], :southwest => [0,0] }
-
-        @areas = message.fetch('info')
-          .fetch('area')
-          .fetch('areaDesc')
-          .split(': ')
+        @message = message
+        @description = @message.fetch('info').fetch('description')
+        @locations = parse_locations()
       end
 
-      def extract_coordinates(message)
-        latitude = 0.0
-        longitude = 0.0 
-        return { :latitude => latitude, :longitude => longitude }
+      def parse_locations
+        locations = []
+        all_locations = read_locations_from_file()
+
+        fips_codes = @message.fetch('info')
+          .fetch('area')
+          .fetch('geocode')
+          .map { |g| g.fetch('value') if g.fetch('valueName') == 'FIPS6' }
+          .compact!
+
+        fips_codes.each do |f|
+          locations << all_locations.collect {|l| l if l[:fips_code] == f }
+        end
+
+        return locations.flatten.compact
+      end
+
+      def read_locations_from_file
+        locations = []
+
+        file = File.dirname(__FILE__) + '/locations.txt'
+        contents = File.open(file, 'r').read()
+        entries = contents.split("\n")
+        entries.each do |entry|
+          fields = entry.split('|')
+          case fields[7]
+          when "A"
+            tz = "Alaska"
+          when "H"
+            tz = "Hawaii"    
+          when "m"
+            tz = "Arizona"    
+          when "M"
+            tz = "Mountain Time (US & Canada)"
+          when "C"
+            tz = "Central Time (US & Canada)"
+          when "E"
+            tz = "Eastern Time (US & Canada)"
+          when "P"
+            tz = "Pacific Time (US & Canada)"
+          else
+            tz = ""
+          end
+          locations << {
+            :state => fields[0],
+            :name => fields[3],
+            :state_zone => fields[4],
+            :county => fields[5],
+            :fips_code => "0" + fields[6],
+            :time_zone => tz,
+            :latitude => fields[9].to_f,
+            :longitude => fields[10].chomp!.to_f
+          }
+        end
+
+        return locations
       end
     end
   end
