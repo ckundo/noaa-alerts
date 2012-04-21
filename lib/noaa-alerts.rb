@@ -35,19 +35,17 @@ module Noaa
 
     class Alert
       attr_reader :description, :latitude, :longitude, :fips_codes, :locations
-      @message = ""
 
       def initialize(message)
-        @message = message
-        @description = @message.fetch('info').fetch('description')
-        @locations = parse_locations()
+        @description = message.fetch('info').fetch('description')
+        @locations = parse_locations(message)
       end
 
-      def parse_locations
+      def parse_locations(message)
         locations = []
         all_locations = read_locations_from_file()
 
-        fips_codes = @message.fetch('info')
+        fips_codes = message.fetch('info')
           .fetch('area')
           .fetch('geocode')
           .map { |g| g.fetch('value') if g.fetch('valueName') == 'FIPS6' }
