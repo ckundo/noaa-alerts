@@ -22,6 +22,19 @@ describe Noaa::Alerts do
       alert.locations.should_not be_empty
     end
 
+    it 'has other expected attributes' do
+      alert.expires_at.should be_an_instance_of DateTime
+      alert.effective_at.should be_an_instance_of DateTime
+      alert.nws_id.should be_an_instance_of String
+      alert.event_name.should be_an_instance_of String
+      alert.summary.should be_an_instance_of String
+      alert.category.should be_an_instance_of String
+      alert.instructions.should be_an_instance_of String
+      alert.severity.should be_an_instance_of String
+      alert.certainty.should be_an_instance_of String
+      alert.urgency.should be_an_instance_of String
+      alert.fips_codes.should_not be_empty
+    end
   end
 
   describe Noaa::Alerts::Location do
