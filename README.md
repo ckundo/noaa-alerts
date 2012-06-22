@@ -16,13 +16,17 @@ Or install it yourself as:
 
     $ gem install noaa-alerts
 
-## Usage
+## Usag
+Instantiate `Noaa::Client` with a two letter US state abbreviation. The result is an array of `Noaa::Alert` objects relevant attributes (`description`, `event`, `severity`, `locations`, etc).
 
     require 'noaa-alerts'
     noaa = Noaa::Client.new('ny')
+    alert = noaa.alerts[0]
 
-    puts noaa.alerts[0].description             # => 'THE NATIONAL WEATHER SERVICE IN UPTON NY HAS ISSUED A\n* SEVERE THUNDERSTORM WARNING FOR...'
-    puts noaa.alerts[0].locations.join(', ')    # => 'Rockland, Westchester'
+    puts alert.locations.join(', ')    # => 'Rockland, Westchester'
+    puts alert.description             # => 'THE NATIONAL WEATHER SERVICE IN UPTON NY HAS ISSUED A\n* SEVERE THUNDERSTORM WARNING FOR...'
+    puts alert.event                   # => 'Special Weather Statement'
+    ...
 
 ## Requirements
 
