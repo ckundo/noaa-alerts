@@ -21,6 +21,10 @@ describe Noaa, :vcr do
       subject { Noaa::Client.new("ak").alerts.first }
 
       its(:description) { should_not be_nil }
+      its(:event) { should_not be_empty }
+      its(:urgency) { should_not be_empty }
+      its(:severity) { should_not be_empty }
+      its(:headline) { should_not be_empty }
       its(:locations) { should_not be_empty }
       its(:identifier) { should_not be_empty }
       its(:effective_at) { should be_an_instance_of Time }
