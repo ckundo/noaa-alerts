@@ -1,13 +1,22 @@
 require 'noaa-alerts'
+require 'vcr'
 
 describe Noaa::Alerts do
   let(:alerts) { Noaa::Alerts.find_by_state("ak") }
+VCR.configure do |c|
+  c.cassette_library_dir = 'spec/fixtures/vcr_cassettes'
+  c.hook_into :webmock
+  c.configure_rspec_metadata!
+end
 
   describe '.fetch_and_create' do
     it 'returns alerts' do
       alerts.should_not be_empty
     end
   end
+RSpec.configure do |c|
+  c.treat_symbols_as_metadata_keys_with_true_values = true
+end
 
   describe Noaa::Alerts::Alert do
     let(:alert) { alerts.first }
