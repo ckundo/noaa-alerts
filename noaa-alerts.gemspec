@@ -5,8 +5,8 @@ Gem::Specification.new do |gem|
   gem.authors       = ["Cameron Cundiff"]
   gem.email         = ["ckundo@gmail.com"]
   gem.description   = %q{A Ruby library for consuming NOAA National Weather Service severe weather alerts.}
-  gem.summary       = %q{Fetch alert feeds with latitude and longitude bounds.}
-  gem.homepage      = ""
+  gem.summary       = %q{Fetch and format feeds from the NOAA.}
+  gem.homepage      = "https://github.com/ckundo/noaa-alerts"
 
   gem.add_dependency("httparty", "~> 0.8.2")
 
@@ -20,5 +20,5 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "noaa-alerts"
   gem.require_paths = ["lib"]
-  gem.version       = Noaa::Alerts::VERSION
+  gem.version       = Noaa::VERSION
 end
