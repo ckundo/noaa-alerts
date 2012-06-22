@@ -10,6 +10,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency("httparty", "~> 0.8.2")
 
+  gem.add_development_dependency("rake") 
   gem.add_development_dependency("rspec", "~> 2.9.0")
   gem.add_development_dependency("webmock", "~> 1.8.7")
   gem.add_development_dependency("vcr", "~> 2.2.2")
