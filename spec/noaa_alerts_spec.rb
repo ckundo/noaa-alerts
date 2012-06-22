@@ -22,6 +22,9 @@ describe Noaa, :vcr do
 
       its(:description) { should_not be_nil }
       its(:locations) { should_not be_empty }
+      its(:identifier) { should_not be_empty }
+      its(:effective_at) { should be_an_instance_of Time }
+      its(:expires_at) { should be_an_instance_of Time }
     end
   end
 end
