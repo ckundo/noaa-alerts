@@ -16,7 +16,7 @@ Or install it yourself as:
 
     $ gem install noaa-alerts
 
-## Usag
+## Usage
 Instantiate `Noaa::Client` with a two letter US state abbreviation. The result is an array of `Noaa::Alert` objects relevant attributes (`description`, `event`, `severity`, `locations`, etc).
 
     require 'noaa-alerts'
