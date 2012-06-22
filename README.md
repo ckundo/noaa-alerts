@@ -1,6 +1,6 @@
 # Noaa::Alerts
 
-TODO: Write a gem description
+A library for consuming and formatting NOAA National Weather Service alerts.
 
 ## Installation
 
@@ -18,7 +18,15 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    require 'noaa-alerts'
+    noaa = Noaa::Client.new('ny')
+
+    puts noaa.alerts[0].description             # => 'THE NATIONAL WEATHER SERVICE IN UPTON NY HAS ISSUED A\n* SEVERE THUNDERSTORM WARNING FOR...'
+    puts noaa.alerts[0].locations.join(', ')    # => 'Rockland, Westchester'
+
+## Requirements
+
+Requires Ruby 1.9
 
 ## Contributing
 
