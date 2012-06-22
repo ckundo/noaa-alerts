@@ -1,4 +1,4 @@
-# Noaa::Alerts
+# noaa-alerts
 
 A library for consuming and formatting NOAA National Weather Service alerts.
 
@@ -26,7 +26,7 @@ Or install it yourself as:
 
 ## Requirements
 
-Requires Ruby 1.9
+Ruby 1.9
 
 ## Contributing
 
