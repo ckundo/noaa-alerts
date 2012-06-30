@@ -2,7 +2,7 @@ require "noaa-alerts/version"
 
 module Noaa
   class Alert
-    attr_reader :description, :locations, :identifier, :effective_at, :expires_at, :event, :urgency, :severity, :headline
+    attr_reader :description, :locations, :identifier, :effective_at, :expires_at, :event, :urgency, :severity, :headline, :sent_at
 
     def initialize(entry)
       @description = ""
@@ -14,6 +14,7 @@ module Noaa
       @identifier = ""
       @effective_at = nil
       @expires_at = nil
+      @sent_at = nil
       handle_entry(entry)
     end
 
@@ -27,6 +28,7 @@ module Noaa
       @headline = entry['info']['headline']
       @locations = entry['info']['area']['areaDesc'].split('; ')
       @identifier = entry['identifier']
+      @sent_at = Time.parse(entry['sent'])
       @effective_at = Time.parse(entry['info']['effective'])
       @expires_at = Time.parse(entry['info']['expires'])
     end
