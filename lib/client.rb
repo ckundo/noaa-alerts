@@ -24,7 +24,8 @@ module Noaa
       entries.each do |entry| 
         item = HTTParty.get(entry['id'],
                             format: :xml)['alert']
-        @alerts << Noaa::Alert.new(entry['id'], item)
+        alert = Noaa::Alert.new(entry['id'], item)
+        @alerts << alert unless alert.description.empty?
       end
     end
   end

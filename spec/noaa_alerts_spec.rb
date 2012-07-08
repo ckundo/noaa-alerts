@@ -13,12 +13,13 @@ end
 
 describe Noaa, :vcr do
   describe ".initialize" do
-    subject { Noaa::Client.new("ny") }
-
-    its(:alerts) { should_not be_empty }
+    it 'has alerts with non-empty values' do
+      Noaa::Client.new("mn").alerts.should_not be_empty
+      Noaa::Client.new("mn").alerts.each { |alert| alert.description.should_not be_empty }
+    end
 
     describe Noaa::Alert do
-      subject { Noaa::Client.new("ny").alerts.first }
+      subject { Noaa::Client.new("mn").alerts.first }
 
       its(:url) { should_not be_empty }
       its(:event) { should_not be_empty }
