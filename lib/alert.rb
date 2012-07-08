@@ -2,9 +2,10 @@ require "noaa-alerts/version"
 
 module Noaa
   class Alert
-    attr_reader :description, :locations, :identifier, :effective_at, :expires_at, :event, :urgency, :severity, :headline, :sent_at
+    attr_reader :url, :description, :locations, :identifier, :effective_at, :expires_at, :event, :urgency, :severity, :headline, :sent_at
 
-    def initialize(entry)
+    def initialize(url, entry)
+      @url = url || ""
       @description = ""
       @event = ""
       @urgency = ""

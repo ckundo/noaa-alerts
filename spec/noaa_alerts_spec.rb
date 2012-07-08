@@ -20,6 +20,7 @@ describe Noaa, :vcr do
     describe Noaa::Alert do
       subject { Noaa::Client.new("ny").alerts.first }
 
+      its(:url) { should_not be_empty }
       its(:event) { should_not be_empty }
       its(:urgency) { should_not be_empty }
       its(:severity) { should_not be_empty }
