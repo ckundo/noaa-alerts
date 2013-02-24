@@ -5,16 +5,15 @@ module Noaa
   class Client
     attr_reader :alerts
 
-    def initialize(state)
+    def initialize(location)
       @alerts = []
-      get_alerts(state)
+      fetch_alerts_for(location)
     end
 
     private
 
-    def get_alerts(state)
-      catalog = HTTParty.get("http://alerts.weather.gov/cap/#{state}.php?x=0",
-                             format: :xml)
+    def fetch_alerts_for(location)
+      catalog = HTTParty.get("http://alerts.weather.gov/cap/#{location}.php?x=0", format: :xml)
       handle_catalog(catalog)
     end
 
@@ -22,8 +21,7 @@ module Noaa
       entries = catalog['feed']['entry']
       entries = [entries] unless entries.kind_of?(Array)
       entries.each do |entry| 
-        item = HTTParty.get(entry['id'],
-                            format: :xml)['alert']
+        item = HTTParty.get(entry['id'], format: :xml)['alert']
         alert = Noaa::Alert.new(entry['id'], item)
         @alerts << alert unless alert.description.empty?
       end

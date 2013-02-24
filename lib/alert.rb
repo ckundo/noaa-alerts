@@ -2,37 +2,44 @@ require "noaa-alerts/version"
 
 module Noaa
   class Alert
-    attr_reader :url, :description, :locations, :identifier, :effective_at, :expires_at, :event, :urgency, :severity, :headline, :sent_at
-
+    attr_reader :url
+    
     def initialize(url, entry)
-      @url = url || ""
-      @description = ""
-      @event = ""
-      @urgency = ""
-      @severity = ""
-      @headline = ""
-      @locations = []
-      @identifier = ""
-      @effective_at = nil
-      @expires_at = nil
-      @sent_at = nil
-      handle_entry(entry) if entry
+      @url = url
+      @entry = entry
+      @info = entry.fetch('info', {})
+    end
+
+    def method_missing(key)
+      @info.fetch(key.to_s)
+    end
+
+    def identifier
+      @entry.fetch('identifier')
+    end
+
+    def locations
+      @info.fetch('area').fetch('areaDesc').split('; ')
+    end
+
+    def effective_at
+      parsed_time_or_string('effective')
+    end
+
+    def expires_at
+      parsed_time_or_string('expires')
+    end
+
+    def sent_at
+      time = @entry.fetch('sent')
+      Time.parse(time) rescue time
     end
 
     private
     
-    def handle_entry(entry)
-      info = entry.fetch('info')
-      @description = info.fetch('description')
-      @event = info.fetch('event')
-      @urgency= info.fetch('urgency')
-      @severity = info.fetch('severity')
-      @headline = info.fetch('headline')
-      @locations = info.fetch('area').fetch('areaDesc').split('; ')
-      @identifier = entry.fetch('identifier')
-      @sent_at = Time.parse(entry.fetch('sent'))
-      @effective_at = Time.parse(info.fetch('effective'))
-      @expires_at = Time.parse(info.fetch('expires'))
+    def parsed_time_or_string(key)
+      time = @info.fetch(key)
+      Time.parse(time) rescue time
     end
   end
 end
