@@ -1,3 +1,6 @@
+## Disclaimer
+This library is not maintained. *It may not work as expected*.
+
 # noaa-alerts
 
 A library for consuming and formatting NOAA National Weather Service alerts.
